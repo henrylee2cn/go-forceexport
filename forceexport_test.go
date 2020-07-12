@@ -50,8 +50,7 @@ func TestGetSelf(t *testing.T) {
 
 func TestInvalidFunc(t *testing.T) {
 	var invalidFunc func()
-	assert.Panics(t, func() {
-		_ = GetFunc(&invalidFunc, "invalidpackage.invalidfunction")
-	})
+	err := GetFunc(&invalidFunc, "invalidpackage.invalidfunction")
+	assert.EqualError(t, err, "invalid function name: invalidpackage.invalidfunction")
 	assert.Nil(t, invalidFunc)
 }

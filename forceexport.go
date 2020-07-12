@@ -59,12 +59,19 @@ func FindFuncWithName(name string) (uintptr, error) {
 	for _, moduleData := range activeModules() {
 		for _, ftab := range moduleData.ftab {
 			f := (*runtime.Func)(unsafe.Pointer(&moduleData.pclntable[ftab.funcoff]))
-			if f.Name() == name {
+			if getName(f) == name {
 				return f.Entry(), nil
 			}
 		}
 	}
 	return 0, fmt.Errorf("invalid function name: %s", name)
+}
+
+func getName(f *runtime.Func) string {
+	defer func() {
+		recover()
+	}()
+	return f.Name()
 }
 
 //go:linkname activeModules runtime.activeModules
