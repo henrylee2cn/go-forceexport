@@ -21,7 +21,7 @@ func GetFunc(outFuncPtr interface{}, name string) error {
 	return nil
 }
 
-// Convenience struct for modifying the underlying code pointer of a function
+// Func convenience struct for modifying the underlying code pointer of a function
 // value. The actual struct has other values, but always starts with a code
 // pointer.
 type Func struct {
@@ -64,7 +64,7 @@ func FindFuncWithName(name string) (uintptr, error) {
 			}
 		}
 	}
-	return 0, fmt.Errorf("Invalid function name: %s", name)
+	return 0, fmt.Errorf("invalid function name: %s", name)
 }
 
 //go:linkname activeModules runtime.activeModules
