@@ -16,7 +16,7 @@ an update to this paragraph.
 
 ## Installation
 
-`$ go get github.com/alangpierce/go-forceexport`
+`$ go get github.com/henrylee2cn/go-forceexport`
 
 ## Usage
 
@@ -38,7 +38,7 @@ The string you give should be the fully-qualified name. For example, here's
 
 ```go
 var getFunc func(interface{}, string) error
-GetFunc(&getFunc, "github.com/alangpierce/go-forceexport.GetFunc")
+GetFunc(&getFunc, "github.com/henrylee2cn/go-forceexport.GetFunc")
 ```
 
 ## Use cases and pitfalls
@@ -72,8 +72,8 @@ the foot:
 The [code](/forceexport.go) is pretty short, so you could just read it, but
 here's a friendlier explanation:
 
-The code uses the `go:linkname` compiler directive to get access to the
-`runtime.firstmoduledata` symbol, which is an internal data structure created by
+The code uses the `go:linkname` compiler directive to get the
+`runtime.activeModules` symbol, which is an internal function created by
 the linker that's used by functions like `runtime.FuncForPC`. (Using
 `go:linkname` is an alternate way to access unexported functions/values, but it
 has other gotchas and can't be used dynamically.)

@@ -3,15 +3,17 @@ package forceexport
 import (
 	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTimeNow(t *testing.T) {
 	var timeNowFunc func() (int64, int32)
 	GetFunc(&timeNowFunc, "time.now")
 	sec, nsec := timeNowFunc()
-	if sec == 0 || nsec == 0 {
-		t.Error("Expected nonzero result from time.now().")
-	}
+	assert.NotEqual(t, 0, sec)
+	assert.NotEqual(t, 0, nsec)
+	t.Logf("sec:%d, nsec:%d", sec, nsec)
 }
 
 // Note that we need to disable inlining here, or else the function won't be
@@ -23,48 +25,33 @@ func addOne(x int) int {
 }
 
 func TestAddOne(t *testing.T) {
-	if addOne(3) != 4 {
-		t.Error("addOne should work properly.")
-	}
-
+	assert.Equal(t, 4, addOne(3))
 	var addOneFunc func(x int) int
-	err := GetFunc(&addOneFunc, "github.com/alangpierce/go-forceexport.addOne")
-	if err != nil {
-		t.Error("Expected nil error.")
-	}
-	if addOneFunc(3) != 4 {
-		t.Error("Expected addOneFunc to add one to 3.")
-	}
+	err := GetFunc(&addOneFunc, "github.com/henrylee2cn/go-forceexport.addOne")
+	assert.NoError(t, err)
+	assert.Equal(t, 4, addOneFunc(3))
 }
 
 func TestGetSelf(t *testing.T) {
 	var getFunc func(interface{}, string) error
-	err := GetFunc(&getFunc, "github.com/alangpierce/go-forceexport.GetFunc")
-	if err != nil {
-		t.Error("Error: %s", err)
-	}
+	err := GetFunc(&getFunc, "github.com/henrylee2cn/go-forceexport.GetFunc")
+	assert.NoError(t, err)
 	// The two functions should share the same code pointer, so they should
 	// have the same string representation.
-	if fmt.Sprint(getFunc) != fmt.Sprint(GetFunc) {
-		t.Errorf("Expected ")
-	}
+	assert.Equal(t, fmt.Sprintf("%p", GetFunc), fmt.Sprintf("%p", getFunc))
+	// if fmt.Sprintf("%p", getFunc) != fmt.Sprintf("%p", GetFunc) {
+	// 	t.Fatalf("Expected ")
+	// }
 	// Call it again on itself!
-	err = getFunc(&getFunc, "github.com/alangpierce/go-forceexport.GetFunc")
-	if err != nil {
-		t.Error("Error: %s", err)
-	}
-	if fmt.Sprint(getFunc) != fmt.Sprint(GetFunc) {
-		t.Errorf("Expected ")
-	}
+	err = getFunc(&getFunc, "github.com/henrylee2cn/go-forceexport.GetFunc")
+	assert.NoError(t, err)
+	assert.Equal(t, fmt.Sprintf("%p", GetFunc), fmt.Sprintf("%p", getFunc))
 }
 
 func TestInvalidFunc(t *testing.T) {
 	var invalidFunc func()
-	err := GetFunc(&invalidFunc, "invalidpackage.invalidfunction")
-	if err == nil {
-		t.Error("Expected an error.")
-	}
-	if invalidFunc != nil {
-		t.Error("Expected a nil function.")
-	}
+	assert.Panics(t, func() {
+		_ = GetFunc(&invalidFunc, "invalidpackage.invalidfunction")
+	})
+	assert.Nil(t, invalidFunc)
 }
