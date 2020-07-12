@@ -10,7 +10,7 @@ by name.
 As you might expect, this library is **unsafe** and **fragile** and probably
 shouldn't be used in production. See "Use cases and pitfalls" below.
 
-It has only been tested on Mac OS X with Go 1.6. If you find that it works or
+It has only been tested on Mac OS X with Go 1.14. If you find that it works or
 breaks on other platforms, feel free to submit a pull request with a fix and/or
 an update to this paragraph.
 
@@ -87,6 +87,8 @@ From there, it creates a function object from the code pointer by calling
 code pointer with the desired one.
 
 Needless to say, it's a scary hack, but it seems to work!
+
+NOTE: For internal functions, if you can't get them, you can try to comment `//go:noinline` on the function
 
 ## License
 
