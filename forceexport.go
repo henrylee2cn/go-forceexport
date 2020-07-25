@@ -74,6 +74,19 @@ func getName(f *runtime.Func) string {
 	return f.Name()
 }
 
+// SymtabNamesOfActiveFunc return the symtab name list of active functions.
+func SymtabNamesOfActiveFunc() []string {
+	slice := activeModules()
+	names := make([]string, 0, len(slice))
+	for _, moduleData := range slice {
+		for _, ftab := range moduleData.ftab {
+			f := (*runtime.Func)(unsafe.Pointer(&moduleData.pclntable[ftab.funcoff]))
+			names = append(names, getName(f))
+		}
+	}
+	return names
+}
+
 //go:linkname activeModules runtime.activeModules
 func activeModules() []*moduledata
 

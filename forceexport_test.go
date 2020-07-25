@@ -7,6 +7,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestSymtabNamesOfActiveFunc(t *testing.T) {
+	t.Log(SymtabNamesOfActiveFunc())
+}
+
 func TestTimeNow(t *testing.T) {
 	var timeNowFunc func() (int64, int32)
 	GetFunc(&timeNowFunc, "time.now")
