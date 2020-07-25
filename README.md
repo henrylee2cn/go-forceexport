@@ -88,7 +88,9 @@ code pointer with the desired one.
 
 Needless to say, it's a scary hack, but it seems to work!
 
-NOTE: For internal functions, if you can't get them, you can try to comment `//go:noinline` on the function
+NOTE: 
+- For internal functions, if you can't get them, you can try to comment `//go:noinline` on the function
+- Ensure that the target function is active, that is, ensure that it has been called
 
 ## License
 
